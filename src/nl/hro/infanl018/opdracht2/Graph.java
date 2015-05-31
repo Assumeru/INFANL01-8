@@ -1,10 +1,9 @@
 package nl.hro.infanl018.opdracht2;
 
-import java.awt.Graphics;
+import javax.swing.*;
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
-
-import javax.swing.JPanel;
 
 public class Graph extends JPanel {
 	private List<Integer> points = new ArrayList<>();
