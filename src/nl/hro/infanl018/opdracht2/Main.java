@@ -1,19 +1,12 @@
 package nl.hro.infanl018.opdracht2;
 
-import java.awt.BorderLayout;
-import java.awt.GridLayout;
+import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
-
-import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JSpinner;
-import javax.swing.SpinnerNumberModel;
 
 public class Main {
 	private JFrame window;
@@ -79,7 +72,7 @@ public class Main {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				clearDatabase();
-				System.out.println("De veranderingentabel is geleegd.");
+				JOptionPane.showMessageDialog(window, "!! Veranderingentabel is geleegd !!");
 			}
 		});
 

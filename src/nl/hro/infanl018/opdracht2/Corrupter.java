@@ -1,10 +1,6 @@
 package nl.hro.infanl018.opdracht2;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 
 
 public class Corrupter implements Runnable {
@@ -13,6 +9,7 @@ public class Corrupter implements Runnable {
 	private boolean running = true;
 	private ThreadManager manager;
 	private Connection conn;
+    public static Object Lock1 = new Object();
 
 	public Corrupter(ThreadManager manager) throws SQLException {
 		this.manager = manager;
@@ -24,10 +21,12 @@ public class Corrupter implements Runnable {
 	public void run() {
 		while(running) {
 			try {
-				addChange();
-				checkRead();
-                unrepeatableRead();
-                phantomRead();
+                synchronized (Lock1) {
+                    addChange();
+                    checkRead();
+                    unrepeatableRead();
+                    phantomRead();
+                }
 			} catch (SQLException e1) {
 				System.err.println("Kon niet lezen/schrijven, sorry.");
 				e1.printStackTrace();
@@ -35,6 +34,7 @@ public class Corrupter implements Runnable {
 			try {
 				Thread.sleep(SLEEP);
 			} catch (InterruptedException e) {
+                System.out.println("Thread 1: Waiting for lock 2...");
 				System.err.println("Ik lag te slapen, maar je moest me weer wakker maken hè?");
 			}
 		}
@@ -105,11 +105,6 @@ public class Corrupter implements Runnable {
         ps.setString(1, "Mac Book");
         ps.setInt(2, (int)Math.round(Math.random()*20)-10);
         ps.execute();
-    }
-
-    public void deadlock() throws SQLException {
-
-
     }
 
 	public void cancel() {
