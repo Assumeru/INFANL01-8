@@ -1,12 +1,22 @@
 package nl.hro.infanl018.opdracht2;
 
-import javax.swing.*;
-import java.awt.*;
+import java.awt.BorderLayout;
+import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.Map;
+
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JSpinner;
+import javax.swing.SpinnerNumberModel;
 
 public class Main {
 	private JFrame window;
@@ -15,6 +25,7 @@ public class Main {
 	private ThreadManager manager;
 	private Connection conn;
 	private Graph graph;
+	private Map<Integer, JLabel> failures;
 
 	public static void main(String[] args) throws SQLException {
 		if(args.length != 3) {
@@ -36,15 +47,52 @@ public class Main {
 		window = new JFrame();
 		window.setTitle("Opdracht 2 - INFANL01-8 - Advanced Databases");
 		window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		window.setSize(600, 400);
+		window.setSize(800, 400);
 		window.setLocationRelativeTo(null);
 	}
 
 	private void initInterface() {
 		JPanel body = new JPanel();
 		JPanel panel = new JPanel();
+		JPanel failures = new JPanel();
+		graph = new Graph();
 		body.setLayout(new BorderLayout());
 		panel.setLayout(new GridLayout(0, 4));
+		failures.setLayout(new GridLayout(1, 0));
+		this.failures = new HashMap<>();
+
+		JPanel f = new JPanel();
+		JLabel title = new JLabel("Dirty reads: ");
+		title.setForeground(graph.getColor(ThreadManager.DIRTY_READ));
+		f.add(title);
+		JLabel l = new JLabel();
+		f.add(l);
+		failures.add(f);
+		this.failures.put(ThreadManager.DIRTY_READ, l);
+		f = new JPanel();
+		title = new JLabel("Non repeatable reads: ");
+		title.setForeground(graph.getColor(ThreadManager.NON_REPEATABLE_READ));
+		f.add(title);
+		l = new JLabel();
+		f.add(l);
+		failures.add(f);
+		this.failures.put(ThreadManager.NON_REPEATABLE_READ, l);
+		f = new JPanel();
+		title = new JLabel("Phantom reads: ");
+		title.setForeground(graph.getColor(ThreadManager.PHANTOM_READ));
+		f.add(title);
+		l = new JLabel();
+		f.add(l);
+		failures.add(f);
+		this.failures.put(ThreadManager.PHANTOM_READ, l);
+		f = new JPanel();
+		title = new JLabel("Dead locks: ");
+		title.setForeground(graph.getColor(ThreadManager.DEAD_LOCK));
+		f.add(title);
+		l = new JLabel();
+		f.add(l);
+		failures.add(f);
+		this.failures.put(ThreadManager.DEAD_LOCK, l);
 
 		SpinnerNumberModel numThreadsModel = new SpinnerNumberModel(2, 1, null, 1);
 		numThreads = new JSpinner(numThreadsModel);
@@ -76,13 +124,11 @@ public class Main {
 			}
 		});
 
-		graph = new Graph();
-		graph.setSize(body.getSize());
-
 		panel.add(run);
-		panel.add(clear);
+		//panel.add(clear);
 		body.add(panel, BorderLayout.NORTH);
 		body.add(graph, BorderLayout.CENTER);
+		body.add(failures, BorderLayout.SOUTH);
 		window.add(body);
 	}
 
@@ -94,8 +140,12 @@ public class Main {
 		}
 	}
 
-	public void addPointToGraph(int delta) {
-		graph.addPoint(delta);
+	public void addPointToGraph(int type, int delta) {
+		graph.addPoint(type, delta);
 		graph.repaint();
+	}
+
+	public void updateFailures(int type, double fps) {
+		failures.get(type).setText(fps+" / s");
 	}
 }

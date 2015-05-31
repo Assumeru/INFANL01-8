@@ -5,6 +5,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ThreadManager {
+	public static final int DIRTY_READ = 0;
+	public static final int NON_REPEATABLE_READ = 1;
+	public static final int PHANTOM_READ = 2;
+	public static final int DEAD_LOCK = 3;
+
 	private List<Corrupter> threads = new ArrayList<>();
 	private int numThreads;
 	private String url;
@@ -34,6 +39,7 @@ public class ThreadManager {
 	public void setNumThreads(int numThreads) {
 		this.numThreads = numThreads;
 		updateThreads();
+		Corrupter.clearFailures();
 	}
 
 	private void updateThreads() {
@@ -54,10 +60,11 @@ public class ThreadManager {
 		}
 	}
 
-	public void report(String product, int quant1, int quant2) {
-		if(quant1 != quant2) {
-			System.out.println(product);
+	public synchronized void report(int type, int delta, double failuresPerSecond) {
+		if(delta != 0) {
+			//System.out.println(type+" "+delta);
 		}
-		window.addPointToGraph(quant1 - quant2);
+		window.addPointToGraph(type, delta);
+		window.updateFailures(type, Math.round(failuresPerSecond * 100) / 100);
 	}
 }
