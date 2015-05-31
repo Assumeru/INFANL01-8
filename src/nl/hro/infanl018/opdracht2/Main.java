@@ -79,6 +79,7 @@ public class Main {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				clearDatabase();
+				System.out.println("De veranderingentabel is geleegd.");
 			}
 		});
 
