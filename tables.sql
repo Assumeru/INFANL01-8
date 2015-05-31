@@ -5,5 +5,5 @@ CREATE TABLE producten(
 CREATE TABLE veranderingen(
 	product varchar(200) REFERENCES producten(naam),
 	verandering int,
-	PRIMARY KEY(product, tijd)
+	PRIMARY KEY(product)
 );
