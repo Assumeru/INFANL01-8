@@ -72,7 +72,7 @@ public class ThreadManager {
 	public synchronized void report(int type, int delta) {
 		synchronized(failures) {
 			if(!failures.containsKey(type)) {
-				failures.put(type, (long)0);
+				failures.put(type, (long) 0);
 			}
 			long f = failures.get(type);
 			if(delta != 0) {

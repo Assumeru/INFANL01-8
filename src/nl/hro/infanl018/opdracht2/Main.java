@@ -110,7 +110,7 @@ public class Main {
 					graph.clearPoints();
 				} else {
 					run.setText("Stop");
-					manager.setNumThreads((Integer)numThreads.getValue());
+					manager.setNumThreads((Integer) numThreads.getValue());
 				}
 				running = !running;
 			}
@@ -126,7 +126,7 @@ public class Main {
 		});
 
 		panel.add(run);
-		//panel.add(clear);
+		// panel.add(clear);
 		body.add(panel, BorderLayout.NORTH);
 		body.add(graph, BorderLayout.CENTER);
 		body.add(failures, BorderLayout.SOUTH);
@@ -147,6 +147,6 @@ public class Main {
 	}
 
 	public void updateFailures(int type, double fps) {
-		failures.get(type).setText(fps+" / s");
+		failures.get(type).setText(fps + " / s");
 	}
 }

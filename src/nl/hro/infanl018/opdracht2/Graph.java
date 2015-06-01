@@ -30,7 +30,7 @@ public class Graph extends JPanel {
 				g.setColor(getColor(type));
 				int x = 0;
 				int y = height;
-				for(int i=0; i < points.length; i++) {
+				for(int i = 0; i < points.length; i++) {
 					Integer point = points[i];
 					if(point != null) {
 						int nX = i * width;
@@ -46,16 +46,16 @@ public class Graph extends JPanel {
 
 	public Color getColor(int type) {
 		switch(type) {
-			case 0:
-				return Color.RED;
-			case 1:
-				return Color.GREEN;
-			case 2:
-				return Color.BLUE;
-			case 3:
-				return Color.YELLOW;
-			default:
-				return Color.BLACK;
+		case 0:
+			return Color.RED;
+		case 1:
+			return Color.GREEN;
+		case 2:
+			return Color.BLUE;
+		case 3:
+			return Color.YELLOW;
+		default:
+			return Color.BLACK;
 		}
 	}
 
@@ -80,7 +80,8 @@ public class Graph extends JPanel {
 				points.clear();
 				points.addAll(newPoints);
 			}
-		} catch(ConcurrentModificationException e) {}
+		} catch (ConcurrentModificationException e) {
+		}
 	}
 
 	public void clearPoints() {

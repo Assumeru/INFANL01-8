@@ -7,7 +7,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.SQLTransactionRollbackException;
 
-
 public class Corrupter implements Runnable {
 	private static final int SLEEP = 500;
 
@@ -26,9 +25,9 @@ public class Corrupter implements Runnable {
 	public void run() {
 		while(running) {
 			try {
-                dirtyRead();
-                unrepeatableRead();
-                phantomRead();
+				dirtyRead();
+				unrepeatableRead();
+				phantomRead();
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}
@@ -48,13 +47,13 @@ public class Corrupter implements Runnable {
 
 	private void deadLock() {
 		try {
-            insertProduct("Kaas");
-            deleteProduct("Kaas");
-            report(ThreadManager.DEAD_LOCK, 0);
-		} catch(SQLTransactionRollbackException e) {
-            report(ThreadManager.DEAD_LOCK, 10);
+			insertProduct("Kaas");
+			deleteProduct("Kaas");
+			report(ThreadManager.DEAD_LOCK, 0);
+		} catch (SQLTransactionRollbackException e) {
+			report(ThreadManager.DEAD_LOCK, 10);
 		} catch (SQLException e) {
-            e.printStackTrace();
+			e.printStackTrace();
 		}
 	}
 
@@ -74,7 +73,8 @@ public class Corrupter implements Runnable {
 	private void dirtyRead() throws SQLException {
 		PreparedStatement p;
 		if(Math.random() < 0.5) {
-			//In 50% van de gevallen update update het aantal producten aan de hand van de veranderingen tabel
+			// In 50% van de gevallen update update het aantal producten aan de
+			// hand van de veranderingen tabel
 			int sum = 0;
 			p = conn.prepareStatement("SELECT SUM(verandering) FROM veranderingen WHERE product = ?");
 			p.setString(1, "Mac Book");
@@ -89,7 +89,8 @@ public class Corrupter implements Runnable {
 			p.execute();
 			conn.commit();
 		} else {
-			//In de andere 50% van de gevallen insert een verandering en commit deze niet
+			// In de andere 50% van de gevallen insert een verandering en commit
+			// deze niet
 			p = conn.prepareStatement("INSERT INTO veranderingen VALUES (?, ?)");
 			p.setString(1, "Mac Book");
 			p.setInt(2, 10);
@@ -101,50 +102,53 @@ public class Corrupter implements Runnable {
 
 	private int selectNumProducts(String product) throws SQLException {
 		int out = 0;
-        PreparedStatement p = conn.prepareStatement("SELECT aantal FROM producten WHERE naam = ?");
-        p.setString(1, product);
-        ResultSet r = p.executeQuery();
-        while(r.next()) {
-            out = r.getInt(1);
-        }
-        r.close();
-        conn.commit();
-        return out;
+		PreparedStatement p = conn.prepareStatement("SELECT aantal FROM producten WHERE naam = ?");
+		p.setString(1, product);
+		ResultSet r = p.executeQuery();
+		while(r.next()) {
+			out = r.getInt(1);
+		}
+		r.close();
+		return out;
 	}
 
 	private void unrepeatableRead() throws SQLException {
-        //unrepeatableRead: A non-repeatable read occurs, when during the course of a transaction,
-        //a row is retrieved twice and the values within the row differ between reads.
-        //UserA reads
-        //UserB reads
-        //UserB runs transaction and commits
-        //UserA reads - Value is nu anders dan de eerste keer
-        int read1 = selectNumProducts("Mac Book");
-        int read2 = selectNumProducts("Mac Book");
-    	report(ThreadManager.NON_REPEATABLE_READ, read1 - read2);
-    }
+		// unrepeatableRead: A non-repeatable read occurs, when during the
+		// course of a transaction,
+		// a row is retrieved twice and the values within the row differ between
+		// reads.
+		// UserA reads
+		// UserB reads
+		// UserB runs transaction and commits
+		// UserA reads - Value is nu anders dan de eerste keer
+		int read1 = selectNumProducts("Mac Book");
+		int read2 = selectNumProducts("Mac Book");
+		conn.commit();
+		report(ThreadManager.NON_REPEATABLE_READ, read1 - read2);
+	}
 
 	private int numChanges(String product) throws SQLException {
 		int numChanges = 0;
-        PreparedStatement p = conn.prepareStatement("SELECT COUNT(1) FROM veranderingen WHERE product = ?");
-        p.setString(1, product);
-        ResultSet r = p.executeQuery();
-        while(r.next()) {
-        	numChanges = r.getInt(1);
-        }
-        r.close();
-    	conn.commit();
-        return numChanges;
+		PreparedStatement p = conn.prepareStatement("SELECT COUNT(1) FROM veranderingen WHERE product = ?");
+		p.setString(1, product);
+		ResultSet r = p.executeQuery();
+		while(r.next()) {
+			numChanges = r.getInt(1);
+		}
+		r.close();
+		return numChanges;
 	}
 
-    private void phantomRead() throws SQLException {
-        // phantomread maken: A phantom read occurs when, in the course of a transaction,
-        // two identical queries are executed, and the collection of
-        // rows returned by the second query is different from the first.
-        int read1 = numChanges("Mac Book");
-        int read2 = numChanges("Mac Book");
-    	report(ThreadManager.PHANTOM_READ, read1 - read2);
-    }
+	private void phantomRead() throws SQLException {
+		// phantomread maken: A phantom read occurs when, in the course of a
+		// transaction,
+		// two identical queries are executed, and the collection of
+		// rows returned by the second query is different from the first.
+		int read1 = numChanges("Mac Book");
+		int read2 = numChanges("Mac Book");
+		conn.commit();
+		report(ThreadManager.PHANTOM_READ, read1 - read2);
+	}
 
 	public void cancel() {
 		running = false;
