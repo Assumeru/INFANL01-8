@@ -2,7 +2,10 @@ package nl.hro.infanl018.opdracht2;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class ThreadManager {
 	public static final int DIRTY_READ = 0;
@@ -16,6 +19,8 @@ public class ThreadManager {
 	private String username;
 	private String password;
 	private Main window;
+	private Map<Integer, Long> failures = new HashMap<>();
+	private Date start = new Date();
 
 	public ThreadManager(Main window, String url, String username, String password) {
 		this.url = url;
@@ -39,7 +44,11 @@ public class ThreadManager {
 	public void setNumThreads(int numThreads) {
 		this.numThreads = numThreads;
 		updateThreads();
-		Corrupter.clearFailures();
+	}
+
+	public void clearFailures() {
+		failures.clear();
+		start = new Date();
 	}
 
 	private void updateThreads() {
@@ -60,11 +69,18 @@ public class ThreadManager {
 		}
 	}
 
-	public synchronized void report(int type, int delta, double failuresPerSecond) {
-		if(delta != 0) {
-			//System.out.println(type+" "+delta);
+	public synchronized void report(int type, int delta) {
+		synchronized(failures) {
+			if(!failures.containsKey(type)) {
+				failures.put(type, (long)0);
+			}
+			long f = failures.get(type);
+			if(delta != 0) {
+				f++;
+				failures.put(type, f);
+			}
+			window.updateFailures(type, Math.round(f * 100000.0 / (new Date().getTime() - start.getTime())) / 100);
 		}
 		window.addPointToGraph(type, delta);
-		window.updateFailures(type, Math.round(failuresPerSecond * 100) / 100);
 	}
 }

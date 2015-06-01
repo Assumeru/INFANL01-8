@@ -5,19 +5,15 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+import java.sql.SQLTransactionRollbackException;
 
 
 public class Corrupter implements Runnable {
 	private static final int SLEEP = 500;
-	private static Map<Integer, Long> failures = new HashMap<>();
 
 	private boolean running = true;
 	private ThreadManager manager;
 	private Connection conn;
-	private Date start;
 
 	public Corrupter(ThreadManager manager) throws SQLException {
 		this.manager = manager;
@@ -26,13 +22,8 @@ public class Corrupter implements Runnable {
 		conn.setAutoCommit(false);
 	}
 
-	public static void clearFailures() {
-		failures.clear();
-	}
-
 	@Override
 	public void run() {
-		start = new Date();
 		while(running) {
 			try {
                 dirtyRead();
@@ -41,13 +32,7 @@ public class Corrupter implements Runnable {
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}
-			try {
-                insertProduct("Kaas");
-                deleteProduct("Kaas");
-                report(ThreadManager.DEAD_LOCK, 0);
-			} catch (SQLException e) {
-                report(ThreadManager.DEAD_LOCK, 5);
-			}
+			deadLock();
 			try {
 				Thread.sleep(SLEEP);
 			} catch (InterruptedException e) {
@@ -61,8 +46,20 @@ public class Corrupter implements Runnable {
 		}
 	}
 
+	private void deadLock() {
+		try {
+            insertProduct("Kaas");
+            deleteProduct("Kaas");
+            report(ThreadManager.DEAD_LOCK, 0);
+		} catch(SQLTransactionRollbackException e) {
+            report(ThreadManager.DEAD_LOCK, 10);
+		} catch (SQLException e) {
+            e.printStackTrace();
+		}
+	}
+
 	private void insertProduct(String product) throws SQLException {
-		PreparedStatement p = conn.prepareStatement("INSERT INTO producten VALUES (?, ?)");
+		PreparedStatement p = conn.prepareStatement("INSERT IGNORE INTO producten VALUES (?, ?)");
 		p.setString(1, product);
 		p.setInt(2, 0);
 		p.execute();
@@ -154,16 +151,6 @@ public class Corrupter implements Runnable {
 	}
 
 	private void report(int type, int delta) {
-		synchronized(failures) {
-			if(!failures.containsKey(type)) {
-				failures.put(type, (long)0);
-			}
-			long f = failures.get(type);
-			if(delta != 0) {
-				f++;
-				failures.put(type, f);
-			}
-			manager.report(type, delta, (double)f*1000 / (new Date().getTime() - start.getTime()));
-		}
+		manager.report(type, delta);
 	}
 }

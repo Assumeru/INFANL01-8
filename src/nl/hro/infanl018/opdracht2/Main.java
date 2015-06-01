@@ -57,7 +57,7 @@ public class Main {
 		JPanel failures = new JPanel();
 		graph = new Graph();
 		body.setLayout(new BorderLayout());
-		panel.setLayout(new GridLayout(0, 4));
+		panel.setLayout(new GridLayout(1, 0));
 		failures.setLayout(new GridLayout(1, 0));
 		this.failures = new HashMap<>();
 
@@ -106,6 +106,7 @@ public class Main {
 				if(running) {
 					run.setText("Start");
 					manager.setNumThreads(0);
+					manager.clearFailures();
 					graph.clearPoints();
 				} else {
 					run.setText("Stop");
