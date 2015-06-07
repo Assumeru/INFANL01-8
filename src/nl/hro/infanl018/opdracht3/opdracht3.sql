@@ -127,7 +127,5 @@ CREATE TABLE perioden (
 CREATE TABLE planning (
 	klas							integer,
 	module						text,
-	PRIMARY KEY(klas, module),
-	CONSTRAINT planning_klas_fkey FOREIGN KEY(klas) REFERENCES klassen(id),
-	CONSTRAINT planning_module_fkey FOREIGN KEY(module) REFERENCES modules(code)
+	PRIMARY KEY(klas, module)
 );
