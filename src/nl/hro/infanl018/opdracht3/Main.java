@@ -6,12 +6,14 @@ import java.util.List;
 
 
 public class Main {
-	private static final int NUM_INSERTS = 1;
-
+	private static final int NUM_INSERTS = 3;
+	private static final int NUM_SELECTS = 2;
 	private String url;
 	private String username;
 	private String password;
 	private List<Double> insertTimes = new ArrayList<>();
+	private List<Double> selectTimes = new ArrayList<>();
+
 
 	public static void main(String[] args) {
 		if(args.length != 3) {
@@ -26,6 +28,7 @@ public class Main {
 		this.username = username;
 		this.password = password;
 		runInserts(NUM_INSERTS, 600);
+		runSelects(NUM_SELECTS, 600);
 	}
 
 	public String getUrl() {
@@ -54,6 +57,11 @@ public class Main {
 			if(insertTimes.size() == NUM_INSERTS) {
 				System.out.println("Gemiddelde insert tijd: "+getAvg(insertTimes)+"s");
 			}
+		}else if((thread instanceof SelectThread)) {
+			selectTimes.add(thread.getAverageExecutionTime());
+			if(selectTimes.size() == NUM_SELECTS) {
+				System.out.println("Gemiddelde select tijd: "+getAvg(selectTimes)+"s");
+			}
 		}
 	}
 
@@ -61,6 +69,18 @@ public class Main {
 		try {
 			for(int i = 0; i < threads; i++) {
 				InsertThread runnable = new InsertThread(this);
+				runnable.setIterations(it);
+				new Thread(runnable).start();
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+
+	private void runSelects(int threads, int it) {
+		try {
+			for(int i = 0; i < threads; i++) {
+				SelectThread runnable = new SelectThread(this);
 				runnable.setIterations(it);
 				new Thread(runnable).start();
 			}
