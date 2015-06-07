@@ -9,35 +9,40 @@ public abstract class ConnectionThread implements Runnable {
 	private int iterations = 0;
 	private long sleep = 100;
 	private long timeTaken = 0;
+	private Main parent;
 
-	public ConnectionThread(String url, String username, String password) throws SQLException {
-		conn = DriverManager.getConnection(url, username, password);
+	public ConnectionThread(Main main) throws SQLException {
+		conn = DriverManager.getConnection(main.getUrl(), main.getUsername(), main.getPassword());
 		conn.setAutoCommit(false);
+		parent = main;
 	}
 
 	public void setIterations(int iterations) {
 		this.iterations = iterations;
 	}
 
-	protected abstract void doSomething();
+	protected abstract void doSomething() throws SQLException;
 
 	@Override
 	public void run() {
-		for(int it = 0; it < iterations; it++) {
-			long start = System.currentTimeMillis();
-			doSomething();
-			timeTaken += System.currentTimeMillis() - start;
-			try {
+		try {
+			for(int it = 0; it < iterations; it++) {
+				long start = System.currentTimeMillis();
+				doSomething();
+				timeTaken += System.currentTimeMillis() - start;
 				Thread.sleep(sleep);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
 			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
 		}
 		try {
 			getConnection().close();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
+		parent.report(this);
 	}
 
 	protected Connection getConnection() {
