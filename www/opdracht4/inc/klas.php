@@ -5,9 +5,9 @@ class Klas {
 		$students = array();
 		$db = Opdracht4::getDatabase();
 		if($unsafe) {
-			$query = $db->query('SELECT * FROM studenten WHERE klas = "'.$class.'"');
+			$query = $db->query('SELECT * FROM studenten WHERE ingeschreven = 1 AND klas = "'.$class.'"');
 		} else {
-			$query = $db->prepare('SELECT * FROM studenten WHERE klas = ?');
+			$query = $db->prepare('SELECT * FROM studenten WHERE ingeschreven = 1 AND klas = ?');
 			$query->execute(array($class));
 		}
 		while($row = $query->fetch()) {

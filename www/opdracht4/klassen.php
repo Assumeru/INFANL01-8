@@ -19,12 +19,13 @@
 <div id="main" class="container">
 	<header>
 		<h1>Klassen</h1>
+		<p>Welkom, <?php echo htmlentities($user->getName()); ?>!</p>
 	</header>
 	<section>
 		<form method="post">
-			<input type="hidden" name="id" value="<?php echo $_POST['id']; ?>" />
-			<input type="hidden" name="password" value="<?php echo $_POST['password']; ?>" />
-			<input type="text" placeholder="Klas" name="class" value="<?php echo (isset($_POST['class']) ? $_POST['class'] : ''); ?>" />
+			<input type="hidden" name="id" value="<?php echo htmlentities($_POST['id']); ?>" />
+			<input type="hidden" name="password" value="<?php echo htmlentities($_POST['password']); ?>" />
+			<input type="text" placeholder="Klas" name="class" value="<?php echo (isset($_POST['class']) ? htmlentities($_POST['class']) : ''); ?>" />
 			<input type="submit" />
 		</form>
 	</section>
@@ -42,8 +43,8 @@
 			foreach($students as $student) {
 				echo '<tr>
 					<td>',$student->getId(),'</td>
-					<td>',$student->getName(),'</td>
-					<td>',$student->getClass(),'</td>
+					<td>',htmlentities($student->getName()),'</td>
+					<td>',htmlentities($student->getClass()),'</td>
 					<td><input type="checkbox" disabled ',($student->isEnrolled() ? 'checked' : ''),' /></td>
 				</tr>';
 			}
