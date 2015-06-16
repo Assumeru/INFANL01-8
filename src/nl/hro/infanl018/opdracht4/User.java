@@ -1,10 +1,21 @@
 package nl.hro.infanl018.opdracht4;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Table;
+
+@Entity
+@Table(name = "users")
 public class User {
+	@Column(name = "firstname")
 	private String firstName;
+	@Column(name = "lastname")
 	private String lastName;
+	@Column(name = "email")
 	private String email;
+	@Column(name = "password")
 	private String password;
+	@Column(name = "paymentdetails")
 	private PaymentDetails paymentDetails;
 
 	public User(String firstName, String lastName, String email, String password, PaymentDetails paymentDetails) {
