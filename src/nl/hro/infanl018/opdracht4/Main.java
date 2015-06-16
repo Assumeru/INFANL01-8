@@ -14,12 +14,14 @@ public class Main {
 	public Main() {
 		sessionFactory = new Configuration().configure().buildSessionFactory();
 		doSomething();
+		sessionFactory.close();
 	}
 
 	private void doSomething() {
 		Session session = sessionFactory.openSession();
 		session.beginTransaction();
-		
+		User test = new User("voornaam", "achternaam", "email", "", null);
+		session.save(test);
 		session.getTransaction().commit();
 		session.close();
 	}
