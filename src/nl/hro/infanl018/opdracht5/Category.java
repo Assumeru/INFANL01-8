@@ -1,4 +1,4 @@
-package nl.hro.infanl018.opdracht4;
+package nl.hro.infanl018.opdracht5;
 
 public class Category {
 	private Category parent;

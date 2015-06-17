@@ -1,8 +1,17 @@
-package nl.hro.infanl018.opdracht4;
+package nl.hro.infanl018.opdracht5;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+
+@Entity
 public class IDeal extends PaymentDetails {
+	@Column(name = "expmonth")
 	private int expirationMonth;
+	@Column(name = "expyear")
 	private int expirationYear;
+
+	public IDeal() {
+	}
 
 	public IDeal(String owner, String number, int expirationMonth, int expirationYear) {
 		super(owner, number);

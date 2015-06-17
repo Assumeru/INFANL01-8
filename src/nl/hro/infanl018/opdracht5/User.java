@@ -1,9 +1,11 @@
-package nl.hro.infanl018.opdracht4;
+package nl.hro.infanl018.opdracht5;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.GenericGenerator;
@@ -15,23 +17,26 @@ public class User {
 	@GeneratedValue(generator="increment")
 	@GenericGenerator(name="increment", strategy = "increment")
 	private int id;
-	@Column(name = "firstname")
+	@Column
 	private String firstName;
-	@Column(name = "lastname")
+	@Column
 	private String lastName;
-	@Column(name = "email")
+	@Column
 	private String email;
-	@Column(name = "password")
+	@Column
 	private String password;
-	//@Column(name = "paymentdetails")
-	//private PaymentDetails paymentDetails;
+	@OneToOne(cascade = CascadeType.ALL)
+	private PaymentDetails paymentDetails;
+
+	public User() {
+	}
 
 	public User(String firstName, String lastName, String email, String password, PaymentDetails paymentDetails) {
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.email = email;
 		this.password = password;
-		//this.paymentDetails = paymentDetails;
+		this.paymentDetails = paymentDetails;
 	}
 
 	public int getId() {
@@ -73,12 +78,12 @@ public class User {
 	public void setPassword(String password) {
 		this.password = password;
 	}
-/*
+
 	public PaymentDetails getPaymentDetails() {
 		return paymentDetails;
 	}
 
 	public void setPaymentDetails(PaymentDetails paymentDetails) {
 		this.paymentDetails = paymentDetails;
-	}*/
+	}
 }
