@@ -1,5 +1,8 @@
 package nl.hro.infanl018.opdracht5;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
@@ -26,7 +29,10 @@ public class Main {
 	private void doSomething() {
 		Session session = sessionFactory.openSession();
 		session.beginTransaction();
-		User test = new User("voornaam", "achternaam", "email", "", new IDeal("voornaam", "", 12, 2015));
+		Set<PaymentDetails> details = new HashSet<PaymentDetails>();
+		details.add(new IDeal("voornaam", "", 12, 2015));
+		details.add(new CreditCard("voornaam", "123", "bank"));
+		User test = new User("voornaam", "achternaam", "email", "", details);
 		session.save(test);
 		session.getTransaction().commit();
 		session.beginTransaction();
