@@ -5,33 +5,22 @@ import javax.persistence.Entity;
 
 @Entity
 public class IDeal extends PaymentDetails {
-	@Column(name = "expmonth")
-	private int expirationMonth;
-	@Column(name = "expyear")
-	private int expirationYear;
+	@Column(name = "bank")
+	private String bank;
 
 	public IDeal() {
 	}
 
-	public IDeal(String owner, String number, int expirationMonth, int expirationYear) {
+	public IDeal(String owner, String number, String bank) {
 		super(owner, number);
-		this.expirationMonth = expirationMonth;
-		this.expirationYear = expirationYear;
+		this.bank = bank;
 	}
 
-	public int getExpirationMonth() {
-		return expirationMonth;
+	public String getBank() {
+		return bank;
 	}
 
-	public void setExpirationMonth(int expirationMonth) {
-		this.expirationMonth = expirationMonth;
-	}
-
-	public int getExpirationYear() {
-		return expirationYear;
-	}
-
-	public void setExpirationYear(int expirationYear) {
-		this.expirationYear = expirationYear;
+	public void setBank(String bank) {
+		this.bank = bank;
 	}
 }
