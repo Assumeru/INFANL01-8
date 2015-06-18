@@ -22,7 +22,7 @@ public class Advert {
 	private boolean active;
 	@Column
 	private Date startingDate;
-	@ManyToOne
+	@OneToMany
 	private Category category;
 	@ManyToOne
 	private User seller;
