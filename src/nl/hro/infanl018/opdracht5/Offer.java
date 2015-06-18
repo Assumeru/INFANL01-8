@@ -1,6 +1,7 @@
 package nl.hro.infanl018.opdracht5;
 
 import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.ManyToAny;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -16,7 +17,7 @@ public class Offer {
 	private int price;
 	@Column
 	private Date date;
-	@Column
+	@ManyToAny(metaColumn = @Column)
 	private Advert advert;
 	@Column
 	private User bidder;
