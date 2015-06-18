@@ -2,6 +2,7 @@ package nl.hro.infanl018.opdracht5;
 
 import java.util.Date;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import org.hibernate.Session;
@@ -15,6 +16,7 @@ public class Main {
 	private SessionFactory sessionFactory;
 	private Category categoryAuto;
 	private Category categoryWitteAuto;
+	private Advert advertAuto;
 
 	public static void main(String[] args) {
 		new Main();
@@ -27,14 +29,16 @@ public class Main {
 			System.out.println("Failed to connect.");
 			System.exit(1);
 		}
-		addUser();
+		addUsers();
+		addCategories();
+		addAdverts();
+		addOffers();
+		setHighestOffer();
+		//TODO reacties
 		sessionFactory.close();
 	}
 
-	private void doSomething() {
-	}
-
-	public void addUser() {
+	private void addUsers() {
 		Session session = sessionFactory.openSession();
 		session.beginTransaction();
 		Set<PaymentDetails> detailsArmindo = new HashSet<PaymentDetails>();
@@ -45,7 +49,7 @@ public class Main {
 		Set<PaymentDetails> detailsWim = new HashSet<PaymentDetails>();
 		detailsWim.add(new CreditCard("Wim", "6452100", 12, 2014));
 		detailsWim.add(new IDeal("Wim", "0012546", "ING Bank"));
-		wim = new User("Wim", "Procee", "iets@hr.nl", "testpassword", detailsArmindo);
+		wim = new User("Wim", "Procee", "iets@hr.nl", "testpassword", detailsWim);
 
 		session.save(armindo);
 		session.save(wim);
@@ -53,26 +57,59 @@ public class Main {
 		session.close();
 	}
 
-	public void addAdvert() {
+	private void addAdverts() {
 		Session session = sessionFactory.openSession();
 		session.beginTransaction();
-		//vul de laatste dingen in, categorie etc. thx
-		Advert advert = new Advert("Witte auto te koop", "Hele mooie witte auto te koop. koop dit nu", 1500, true, new Date(), null, );
-		session.save(advert);
+		Set<Category> categories = new HashSet<Category>();
+		categories.add(categoryAuto);
+		categories.add(categoryWitteAuto);
+		advertAuto = new Advert("Witte auto te koop", "Hele mooie witte auto te koop. koop dit nu", 1500, true, new Date(), categories, armindo, null);
+		session.save(advertAuto);
 		session.getTransaction().commit();
 		session.close();
 	}
 
-	public void addCategory() {
+	private void addCategories() {
 		Session session = sessionFactory.openSession();
 		session.beginTransaction();
 
 		categoryAuto = new Category(null , "Auto's");
 		session.save(categoryAuto);
-		session.getTransaction().commit();
 
 		categoryWitteAuto = new Category(categoryAuto, "Witte auto's");
 		session.save(categoryWitteAuto);
+		session.getTransaction().commit();
+		session.close();
+	}
+
+	private void addOffers() {
+		Session session = sessionFactory.openSession();
+		session.beginTransaction();
+		Offer o1 = new Offer(1, new Date(), advertAuto, armindo);
+		Offer o2 = new Offer(20, new Date(), advertAuto, wim);
+		session.save(o1);
+		session.save(o2);
+		session.getTransaction().commit();
+		session.close();
+	}
+
+	private void setHighestOffer() {
+		Session session = sessionFactory.openSession();
+
+		List<Offer> offers = session.createCriteria(Offer.class).list();
+		Offer highest = null;
+		for(Offer o : offers) {
+			if(highest == null || highest.getPrice() < o.getPrice()) {
+				highest = o;
+			}
+		}
+		System.out.println(highest.getPrice()+" offers: "+offers.size());
+
+		session.beginTransaction();
+
+		advertAuto.setSuccessfulOffer(highest);
+		session.save(advertAuto);
+
 		session.getTransaction().commit();
 		session.close();
 	}
