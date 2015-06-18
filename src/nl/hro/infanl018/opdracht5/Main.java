@@ -30,8 +30,8 @@ public class Main {
 		Session session = sessionFactory.openSession();
 		session.beginTransaction();
 		Set<PaymentDetails> details = new HashSet<PaymentDetails>();
-		details.add(new IDeal("voornaam", "", 12, 2015));
-		details.add(new CreditCard("voornaam", "123", "bank"));
+		details.add(new CreditCard("voornaam", "", 12, 2015));
+		details.add(new IDeal("voornaam", "123", "bank"));
 		User test = new User("voornaam", "achternaam", "email", "", details);
 		session.save(test);
 		session.getTransaction().commit();

@@ -94,11 +94,11 @@ public class User {
 		this.paymentDetails = paymentDetails;
 	}
 
-	public Set<Advert> getAdvert() {
+	public Set<Advert> getAdverts() {
 		return adverts;
 	}
 
-	public void setAdvert(Set<Advert> adverts) {
+	public void setAdverts(Set<Advert> adverts) {
 		this.adverts = adverts;
 	}
 

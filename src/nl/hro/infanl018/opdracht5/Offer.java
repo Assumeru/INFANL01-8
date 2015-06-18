@@ -1,13 +1,18 @@
 package nl.hro.infanl018.opdracht5;
 
-import org.hibernate.annotations.GenericGenerator;
-import org.hibernate.annotations.ManyToAny;
-
-import javax.persistence.*;
 import java.util.Date;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.OneToOne;
+import javax.persistence.Table;
+
+import org.hibernate.annotations.GenericGenerator;
+
 @Entity
-@Table(name = "offer")
+@Table(name = "offers")
 public class Offer {
 	@Id
 	@GeneratedValue(generator="increment")
@@ -17,13 +22,15 @@ public class Offer {
 	private int price;
 	@Column
 	private Date date;
-	@ManyToAny(metaColumn = @Column)
+	@OneToOne
 	private Advert advert;
-	@Column
+	@OneToOne
 	private User bidder;
 
-	public Offer(int id, int price, Date date, Advert advert, User bidder) {
-		this.id = id;
+	public Offer() {
+	}
+
+	public Offer(int price, Date date, Advert advert, User bidder) {
 		this.price = price;
 		this.date = date;
 		this.advert = advert;

@@ -6,7 +6,7 @@ import javax.persistence.*;
 import java.util.Date;
 
 @Entity
-@Table(name = "advert")
+@Table(name = "adverts")
 public class Advert {
 	@Id
 	@GeneratedValue(generator="increment")
@@ -32,8 +32,7 @@ public class Advert {
 	public Advert() {
 	}
 
-	public Advert(int id, String name, String description, int startingPrice, boolean active, Date startingDate, Category category, User seller, Offer successfulOffer) {
-		this.id = id;
+	public Advert(String name, String description, int startingPrice, boolean active, Date startingDate, Category category, User seller, Offer successfulOffer) {
 		this.name = name;
 		this.description = description;
 		this.startingPrice = startingPrice;
