@@ -1,12 +1,6 @@
 package nl.hro.infanl018.opdracht5;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.OneToOne;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 import org.hibernate.annotations.GenericGenerator;
 
@@ -21,22 +15,25 @@ public class User {
 	private String firstName;
 	@Column
 	private String lastName;
-	@Column
+	@Column(unique = true)
 	private String email;
 	@Column
 	private String password;
 	@OneToOne(cascade = CascadeType.ALL)
 	private PaymentDetails paymentDetails;
+	@OneToMany(cascade = CascadeType.ALL)
+	private Advert advert;
 
 	public User() {
 	}
 
-	public User(String firstName, String lastName, String email, String password, PaymentDetails paymentDetails) {
+	public User(String firstName, String lastName, String email, String password, PaymentDetails paymentDetails, Advert advert) {
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.email = email;
 		this.password = password;
 		this.paymentDetails = paymentDetails;
+		this.advert = advert;
 	}
 
 	public int getId() {
@@ -85,5 +82,13 @@ public class User {
 
 	public void setPaymentDetails(PaymentDetails paymentDetails) {
 		this.paymentDetails = paymentDetails;
+	}
+
+	public Advert getAdvert() {
+		return advert;
+	}
+
+	public void setAdvert(Advert advert) {
+		this.advert = advert;
 	}
 }
