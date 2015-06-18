@@ -56,7 +56,7 @@ public class Main {
 	public void addAdvert() {
 		Session session = sessionFactory.openSession();
 		session.beginTransaction();
-		//vul de laatste dingen in, categorie etc.
+		//vul de laatste dingen in, categorie etc. thx
 		Advert advert = new Advert("Witte auto te koop", "Hele mooie witte auto te koop. koop dit nu", 1500, true, new Date(), null, );
 		session.save(advert);
 		session.getTransaction().commit();
