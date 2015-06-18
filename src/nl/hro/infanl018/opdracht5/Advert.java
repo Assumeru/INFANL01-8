@@ -4,6 +4,7 @@ import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 import java.util.Date;
+import java.util.Set;
 
 @Entity
 @Table(name = "advert")
@@ -28,6 +29,8 @@ public class Advert {
 	private User seller;
 	@Column
 	private Offer successfulOffer;
+	@OneToMany(cascade = CascadeType.ALL)
+	private Set<Offer> offers;
 
 	public Advert() {
 	}
@@ -114,5 +117,13 @@ public class Advert {
 
 	public void setSuccessfulOffer(Offer successfulOffer) {
 		this.successfulOffer = successfulOffer;
+	}
+
+	public Set<Offer> getOffers() {
+		return offers;
+	}
+
+	public void setOffers(Set<Offer> offers) {
+		this.offers = offers;
 	}
 }

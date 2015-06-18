@@ -32,6 +32,8 @@ public class User {
 	private Set<PaymentDetails> paymentDetails;
 	@OneToMany(cascade = CascadeType.ALL)
 	private Set<Advert> adverts;
+	@OneToMany(cascade = CascadeType.ALL)
+	private Set<Offer> offers;
 
 	public User() {
 	}
@@ -99,4 +101,13 @@ public class User {
 	public void setAdvert(Set<Advert> adverts) {
 		this.adverts = adverts;
 	}
+
+	public Set<Offer> getOffers() {
+		return offers;
+	}
+
+	public void setOffers(Set<Offer> offers) {
+		this.offers = offers;
+	}
+
 }
