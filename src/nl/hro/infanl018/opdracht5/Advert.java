@@ -1,18 +1,39 @@
 package nl.hro.infanl018.opdracht5;
 
+import org.hibernate.annotations.GenericGenerator;
+
+import javax.persistence.*;
 import java.util.Date;
 
+@Entity
+@Table(name = "advert")
 public class Advert {
+	@Id
+	@GeneratedValue(generator="increment")
+	@GenericGenerator(name="increment", strategy = "increment")
+	private int id;
+	@Column
 	private String name;
+	@Column
 	private String description;
+	@Column
 	private int startingPrice;
+	@Column
 	private boolean active;
+	@Column
 	private Date startingDate;
+	@Column
 	private Category category;
+	@Column
 	private User seller;
+	@Column
 	private Offer successfulOffer;
 
-	public Advert(String name, String description, int startingPrice, boolean active, Date startingDate, Category category, User seller, Offer successfulOffer) {
+	public Advert() {
+	}
+
+	public Advert(int id, String name, String description, int startingPrice, boolean active, Date startingDate, Category category, User seller, Offer successfulOffer) {
+		this.id = id;
 		this.name = name;
 		this.description = description;
 		this.startingPrice = startingPrice;
@@ -21,6 +42,14 @@ public class Advert {
 		this.category = category;
 		this.seller = seller;
 		this.successfulOffer = successfulOffer;
+	}
+
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
 	}
 
 	public String getName() {

@@ -15,5 +15,6 @@
 		<mapping class="nl.hro.infanl018.opdracht5.PaymentDetails" />
 		<mapping class="nl.hro.infanl018.opdracht5.IDeal" />
 		<mapping class="nl.hro.infanl018.opdracht5.CreditCard" />
+		<mapping class="nl.hro.infanl018.opdracht5.Advert" />
 	</session-factory>
 </hibernate-configuration>  

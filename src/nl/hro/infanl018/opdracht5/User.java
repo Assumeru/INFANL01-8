@@ -1,5 +1,6 @@
 package nl.hro.infanl018.opdracht5;
 
+
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -29,6 +30,8 @@ public class User {
 	private String password;
 	@OneToMany(cascade = CascadeType.ALL)
 	private Set<PaymentDetails> paymentDetails;
+	@OneToMany(cascade = CascadeType.ALL)
+	private Set<Advert> adverts;
 
 	public User() {
 	}
@@ -87,5 +90,13 @@ public class User {
 
 	public void setPaymentDetails(Set<PaymentDetails> paymentDetails) {
 		this.paymentDetails = paymentDetails;
+	}
+
+	public Set<Advert> getAdvert() {
+		return adverts;
+	}
+
+	public void setAdvert(Set<Advert> adverts) {
+		this.adverts = adverts;
 	}
 }
