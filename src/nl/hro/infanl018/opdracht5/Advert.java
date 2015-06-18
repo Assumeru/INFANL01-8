@@ -3,7 +3,9 @@ package nl.hro.infanl018.opdracht5;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
+
 import java.util.Date;
+import java.util.Set;
 
 @Entity
 @Table(name = "adverts")
@@ -22,8 +24,8 @@ public class Advert {
 	private boolean active;
 	@Column
 	private Date startingDate;
-	@ManyToOne
-	private Category category;
+	@OneToMany
+	private Set<Category> categories;
 	@ManyToOne
 	private User seller;
 	@ManyToOne
@@ -32,13 +34,13 @@ public class Advert {
 	public Advert() {
 	}
 
-	public Advert(String name, String description, int startingPrice, boolean active, Date startingDate, Category category, User seller, Offer successfulOffer) {
+	public Advert(String name, String description, int startingPrice, boolean active, Date startingDate, Set<Category> categories, User seller, Offer successfulOffer) {
 		this.name = name;
 		this.description = description;
 		this.startingPrice = startingPrice;
 		this.active = active;
 		this.startingDate = startingDate;
-		this.category = category;
+		this.categories = categories;
 		this.seller = seller;
 		this.successfulOffer = successfulOffer;
 	}
@@ -91,12 +93,12 @@ public class Advert {
 		this.startingDate = startingDate;
 	}
 
-	public Category getCategory() {
-		return category;
+	public Set<Category> getCategories() {
+		return categories;
 	}
 
-	public void setCategory(Category category) {
-		this.category = category;
+	public void setCategories(Set<Category> categories) {
+		this.categories = categories;
 	}
 
 	public User getSeller() {
