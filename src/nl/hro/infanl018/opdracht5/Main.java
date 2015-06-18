@@ -34,7 +34,7 @@ public class Main {
 		addAdverts();
 		addOffers();
 		setHighestOffer();
-		//TODO reacties
+		addResponses();
 		sessionFactory.close();
 	}
 
@@ -109,6 +109,20 @@ public class Main {
 
 		advertAuto.setSuccessfulOffer(highest);
 		session.save(advertAuto);
+
+		session.getTransaction().commit();
+		session.close();
+	}
+
+	private void addResponses() {
+		Session session = sessionFactory.openSession();
+		session.beginTransaction();
+
+		AdvertResponse r1 = new AdvertResponse("Hij is heel mooi", new Date(), armindo, advertAuto);
+		AdvertResponse r2 = new AdvertResponse("Hij is helemaal niet mooi", new Date(), wim, advertAuto);
+
+		session.save(r1);
+		session.save(r2);
 
 		session.getTransaction().commit();
 		session.close();
