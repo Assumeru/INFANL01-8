@@ -23,11 +23,11 @@ public class Advert {
 	private boolean active;
 	@Column
 	private Date startingDate;
-	@Column
+	@ManyToOne
 	private Category category;
-	@Column
+	@ManyToOne
 	private User seller;
-	@Column
+	@ManyToOne
 	private Offer successfulOffer;
 	@OneToMany(cascade = CascadeType.ALL)
 	private Set<Offer> offers;
